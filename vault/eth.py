@@ -1,4 +1,5 @@
 from web3.exceptions import InfuraKeyNotFound
+import sys
 
 try:
     from web3.auto.infura import w3
@@ -6,7 +7,8 @@ try:
 except InfuraKeyNotFound as err:
     print(err)
     print("Run `export WEB3_INFURA_PROJECT_ID=xxxxxxxx` where xxxxxxxx is your infura project id.", 'For more information visit: https://web3py.readthedocs.io/en/latest/providers.html#infura-mainnet')
-
+    sys.exit()
+    
 if not w3.isConnected():
     print('Connection failed')
 

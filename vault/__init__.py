@@ -1,0 +1,1 @@
+from vault.__main__ import main

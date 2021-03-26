@@ -2,8 +2,8 @@ import socket
 import os
 import sys
 import json
-from utils import recv_msg, send_msg
-from eth import sign_transfer
+from vault.utils import recv_msg, send_msg
+from vault.eth import sign_transfer
 
 BUF_SIZE = 1024
 
@@ -53,23 +53,23 @@ def process_msg(msg):
         if 'tx' in command
     ]).encode()
 
+def main():
+    with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as server:
+        server.bind(SOCK_PATH)
+        server.listen()
+        print('Listening on {}'.format(SOCK_PATH))
 
-with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as server:
-    server.bind(SOCK_PATH)
-    server.listen()
-    print('Listening on {}'.format(SOCK_PATH))
+        while True:
+            try:
+                conn, addr = server.accept()
+                with conn:
+                    data = recv_msg(conn)
+                    msg = data.decode()
+                    response = process_msg(msg)
+                    send_msg(conn, response)
 
-    while True:
-        try:
-            conn, addr = server.accept()
-            with conn:
-                data = recv_msg(conn)
-                msg = data.decode()
-                response = process_msg(msg)
-                send_msg(conn, response)
+            except KeyboardInterrupt:
+                print()
+                break
 
-        except KeyboardInterrupt:
-            print()
-            break
-
-os.remove(SOCK_PATH)
+    os.remove(SOCK_PATH)
