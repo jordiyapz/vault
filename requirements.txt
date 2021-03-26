@@ -1,0 +1,4 @@
+# To ensure app dependencies are ported from your virtual environment/host machine into your container, run 'pip freeze > requirements.txt' in the terminal to overwrite this file
+autopep8==1.5.6
+pycodestyle==2.7.0
+toml==0.10.2
