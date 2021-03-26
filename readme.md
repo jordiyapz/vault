@@ -49,11 +49,11 @@ After the server has been started, you can communicate to the server via unix so
 
 ```js
 {
-	"id": "some id",
-	"type": "sign_transfer",
-	"from_address": "your private key file name",
+    "id": "some id",
+    "type": "sign_transfer",
+    "from_address": "your private key file name",
     "to_address": "ETH address",
-	"amount": "Amount as string in ether unit"
+    "amount": "Amount as string in ether unit"
 }
 ```
 
@@ -71,7 +71,7 @@ If nothing goes wrong, you will receive response in this format:
 ```js
 {
 	"id": "some id",
-	"tx": "your raw signed transaction cipher" 
+	"tx": "your raw signed transaction cipher"
 }
 ```
 
