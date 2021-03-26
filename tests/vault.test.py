@@ -7,6 +7,9 @@ from vault.utils import send_msg, recv_msg
 
 BUF_SIZE = 1024
 SOCK_PATH = sys.argv[1]
+if not os.path.exists(SOCK_PATH):
+    print('could not connect')
+    sys.exit(1)
 
 messages = [
     json.dumps({
@@ -26,6 +29,7 @@ messages = [
 ]
 
 with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as s:
+    print(SOCK_PATH)
     s.connect(SOCK_PATH)
     send_msg(s, '\n'.join(messages).encode())
 

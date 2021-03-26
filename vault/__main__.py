@@ -13,9 +13,6 @@ if len(sys.argv) != 2:
 
 SOCK_PATH = sys.argv[1]
 
-if os.path.exists(SOCK_PATH):
-    os.remove(SOCK_PATH)
-
 
 def process_msg(msg):
     # process msg and return response
@@ -53,10 +50,15 @@ def process_msg(msg):
         if 'tx' in command
     ]).encode()
 
+
 def main():
+    if os.path.exists(SOCK_PATH):
+        os.remove(SOCK_PATH)
+
     with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as server:
         server.bind(SOCK_PATH)
-        server.listen()
+        assert os.path.exists(SOCK_PATH), 'cannot create connection'
+        server.listen(1)
         print('Listening on {}'.format(SOCK_PATH))
 
         while True:
