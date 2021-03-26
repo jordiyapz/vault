@@ -18,11 +18,23 @@ Written by [Jordi Yaputra](https://github.com/jordiyapz)
 
 ## Usage
 
-### Using Builded Executable
+### Using builded executable
 
 - Move the executable file to the same directory as where you save your private key.
 - Follow [prerequisite instruction](https://github.com/jordiyapz/vault#prerequisite).
 - Run using `./vault PATH` where `PATH` is your unix connection file.
+
+### From source code
+
+- Move the private key to this project folder.
+- Follow [prerequisite instruction](https://github.com/jordiyapz/vault#prerequisite).
+- Run the following commands in terminal:
+    ```
+    pip install -r requirements.txt
+    python main.py PATH
+    ```
+    where `PATH` is your unix connection file.
+
 > ⚠️ **Warning**
 >
 > Running this program will automatically discard existing connection `PATH` and create a new one.
