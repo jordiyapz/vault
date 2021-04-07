@@ -15,11 +15,21 @@ SOCK_PATH = sys.argv[1]
 
 
 def process_msg(msg):
-    # process msg and return response
-    commands = [json.loads(json_str)
-                for json_str in msg.split('\n') if json_str]
+    try:
+        # process msg and return response
+        commands = [json.loads(json_str)
+                    for json_str in msg.split('\n') if json_str]
+    except ValueError:
+        return "Error: Invalid json string".encode()
 
     for command in commands:
+        # structure checks
+        missing_keys = ["'{}'".format(key)
+                        for key in ['id', 'from_address', 'to_address', 'amount', 'type']
+                        if key not in command]
+        if missing_keys:
+            return "Error: Missing object keys: {}.".format(', '.join(missing_keys)).encode()
+        
         print('Signing {}:'.format(command['id']), end=' ')
         address = command['from_address']
         try:
@@ -28,8 +38,8 @@ def process_msg(msg):
                 private_key = f.read()
 
         except FileNotFoundError:
-            print('Cannot find {} address key'.format(filename))
-            return 'private key for address {} not found'.format(address).encode()
+            print('\nFailed! Cannot find {} address key'.format(filename))
+            return 'Error: Private key for address {} not found'.format(address).encode()
 
         try:
             signed = sign_transfer(private_key, address,
@@ -64,11 +74,16 @@ def main():
         while True:
             try:
                 conn, addr = server.accept()
-                with conn:
+                while conn:
                     data = recv_msg(conn)
+                    if not data:
+                        send_msg(conn, 'disconnected'.encode())
+                        break
+
                     msg = data.decode()
                     response = process_msg(msg)
                     send_msg(conn, response)
+                conn.close()
 
             except KeyboardInterrupt:
                 print()
